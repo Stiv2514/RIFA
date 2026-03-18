@@ -22,6 +22,21 @@ body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;m
 #setup-banner .sb-text strong{color:#ff8c00;}
 #setup-banner a{color:#ffd480;text-decoration:underline;}
 
+/* PAYMENT BANNER */
+#payment-banner{background:linear-gradient(135deg,#0a1f0a 0%,#0d2a1a 100%);border-bottom:2px solid rgba(46,204,113,0.4);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+#payment-banner .pb-left{display:flex;align-items:center;gap:0.75rem;}
+#payment-banner .pb-icon{font-size:1.4rem;}
+#payment-banner .pb-label{font-size:0.7rem;color:rgba(46,204,113,0.7);text-transform:uppercase;letter-spacing:0.6px;font-weight:500;}
+#payment-banner .pb-name{font-family:"Syne",sans-serif;font-size:0.95rem;font-weight:700;color:#E8FFF0;margin-top:1px;}
+#payment-banner .pb-divider{width:1px;height:36px;background:rgba(46,204,113,0.2);}
+#payment-banner .pb-account{display:flex;flex-direction:column;}
+#payment-banner .pb-bank{font-size:0.7rem;color:rgba(46,204,113,0.7);text-transform:uppercase;letter-spacing:0.5px;}
+#payment-banner .pb-num{font-family:"Syne",sans-serif;font-size:1.1rem;font-weight:800;color:#2ECC71;letter-spacing:1px;margin-top:1px;}
+#payment-banner .pb-copy{background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);color:#2ECC71;padding:0.38rem 0.9rem;border-radius:20px;cursor:pointer;font-size:0.78rem;font-family:"DM Sans",sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;}
+#payment-banner .pb-copy:hover{background:rgba(46,204,113,0.22);border-color:rgba(46,204,113,0.5);}
+#payment-banner .pb-copy:active{transform:scale(0.97);}
+#payment-banner .pb-note{font-size:0.72rem;color:rgba(255,255,255,0.35);font-style:italic;}
+
 /* SYNC STATUS */
 #sync-status{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;padding:0.35rem 0.9rem;border-radius:20px;border:1px solid rgba(255,255,255,0.08);white-space:nowrap;}
 #sync-status.connected{color:#2ECC71;border-color:rgba(46,204,113,0.3);}
@@ -173,6 +188,27 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
     <strong>Configuración pendiente:</strong> Para que todos compartan los mismos datos, debes configurar Firebase.
     Sigue las instrucciones en el archivo <strong>README.md</strong> — toma menos de 5 minutos y es gratis.
     Si ya configuraste Firebase, este aviso desaparecerá automáticamente.
+  </div>
+</div>
+
+
+<!-- Payment Banner -->
+<div id="payment-banner">
+  <div class="pb-left">
+    <span class="pb-icon">💳</span>
+    <div>
+      <div class="pb-label">Titular de la cuenta</div>
+      <div class="pb-name">MARIA ZAMBRANO</div>
+    </div>
+    <div class="pb-divider"></div>
+    <div class="pb-account">
+      <div class="pb-bank">Cuenta Transaccional</div>
+      <div class="pb-num">2201894497</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+    <span class="pb-note">Realiza tu pago y reserva tu número</span>
+    <button class="pb-copy" onclick="copyAccount()">📋 Copiar número de cuenta</button>
   </div>
 </div>
 
@@ -648,6 +684,14 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
       setTimeout(() => p.remove(), (dur+1)*1000);
     }
   }
+
+  window.copyAccount = function() {
+    navigator.clipboard.writeText('2201894497').then(() => {
+      showToast('✅ Número de cuenta copiado: 2201894497');
+    }).catch(() => {
+      showToast('Cuenta: 2201894497 — MARIA ZAMBRANO');
+    });
+  };
 </script>
 </body>
 </html>
