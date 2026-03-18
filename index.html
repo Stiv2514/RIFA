@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎟️ Rifa Solidaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#F5C842;--gold-dark:#C99A0A;--navy:#0D1B2A;--navy2:#162033;
+  --navy3:#1E2D45;--card:#1A2740;--accent:#FF6B6B;--green:#2ECC71;
+  --white:#F8F5EE;--muted:#8899AA;--text:#E8EFF8;--edit:#74B9FF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+/* SETUP BANNER */
+#setup-banner{background:#1a0a00;border-bottom:2px solid #ff6b00;padding:0.9rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+#setup-banner.hidden{display:none;}
+#setup-banner .sb-icon{font-size:1.3rem;}
+#setup-banner .sb-text{flex:1;font-size:0.82rem;color:#ffb347;line-height:1.5;}
+#setup-banner .sb-text strong{color:#ff8c00;}
+#setup-banner a{color:#ffd480;text-decoration:underline;}
+
+/* SYNC STATUS */
+#sync-status{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;padding:0.35rem 0.9rem;border-radius:20px;border:1px solid rgba(255,255,255,0.08);white-space:nowrap;}
+#sync-status.connected{color:#2ECC71;border-color:rgba(46,204,113,0.3);}
+#sync-status.disconnected{color:var(--accent);border-color:rgba(255,107,107,0.3);}
+#sync-status.connecting{color:var(--gold);border-color:rgba(245,200,66,0.3);}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+
+header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bottom:2px solid rgba(245,200,66,0.3);padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.logo-area h1{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;color:var(--gold);letter-spacing:-0.5px;}
+.logo-area p{font-size:0.82rem;color:var(--muted);margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+.header-stats{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat .val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold);}
+.stat .lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+
+.config-panel{background:var(--navy2);border-bottom:1px solid rgba(255,255,255,0.05);padding:0.85rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.config-panel label{font-size:0.8rem;color:var(--muted);white-space:nowrap;}
+.config-panel input[type="text"]{background:var(--navy3);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:0.38rem 0.7rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.83rem;width:190px;}
+.config-panel input[type="number"]{background:var(--navy3);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:0.38rem 0.7rem;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.83rem;width:80px;}
+.config-panel input:focus{outline:none;border-color:var(--gold);}
+
+.search-bar{background:var(--navy2);border-bottom:1px solid rgba(255,255,255,0.05);padding:0.75rem 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.search-bar input{background:var(--navy3);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:0.4rem 0.9rem;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:0.83rem;width:210px;}
+.search-bar input:focus{outline:none;border-color:var(--gold);}
+.search-bar input::placeholder{color:var(--muted);}
+.filter-btns{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.fbtn{padding:0.32rem 0.85rem;border-radius:20px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:var(--muted);cursor:pointer;font-size:0.77rem;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.fbtn:hover{color:var(--text);border-color:rgba(255,255,255,0.3);}
+.fbtn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:500;}
+
+.btn{padding:0.42rem 1rem;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:500;transition:all 0.15s;}
+.btn:active{transform:scale(0.97);}
+.btn-gold{background:var(--gold);color:var(--navy);}
+.btn-gold:hover{background:#ffd44a;}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.15);}
+.btn-outline:hover{color:var(--text);border-color:rgba(255,255,255,0.3);}
+.btn-danger{background:rgba(255,107,107,0.15);color:var(--accent);border:1px solid rgba(255,107,107,0.3);}
+.btn-danger:hover{background:rgba(255,107,107,0.25);}
+
+.legend{padding:0.6rem 2rem;display:flex;gap:1.2rem;align-items:center;background:var(--navy2);border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:var(--muted);}
+.dot{width:13px;height:13px;border-radius:3px;}
+.dot-free{background:var(--navy3);border:1px solid rgba(255,255,255,0.1);}
+.dot-taken{background:rgba(255,107,107,0.35);border:1px solid rgba(255,107,107,0.5);}
+.dot-winner{background:rgba(245,200,66,0.3);border:1px solid var(--gold);}
+
+.main{padding:1.25rem 2rem;max-width:1200px;margin:0 auto;}
+
+/* LOADING OVERLAY */
+#loading-screen{position:fixed;inset:0;background:var(--navy);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;}
+#loading-screen.hidden{display:none;}
+.spinner{width:36px;height:36px;border:3px solid rgba(245,200,66,0.2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading-screen p{color:var(--muted);font-size:0.85rem;}
+
+#tickets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:7px;margin-bottom:2rem;}
+
+.ticket{aspect-ratio:1;border-radius:7px;background:var(--card);border:1px solid rgba(255,255,255,0.07);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.12s,background 0.12s,transform 0.1s;position:relative;overflow:hidden;}
+.ticket:hover{border-color:var(--gold);background:#243050;transform:translateY(-1px);}
+.ticket.taken{background:rgba(255,107,107,0.1);border-color:rgba(255,107,107,0.3);}
+.ticket.taken:hover{background:rgba(116,185,255,0.1);border-color:rgba(116,185,255,0.4);}
+.ticket.winner{background:rgba(245,200,66,0.18);border-color:var(--gold);animation:pulseWinner 1.2s ease-in-out infinite;}
+.ticket.hidden{display:none;}
+@keyframes pulseWinner{0%,100%{box-shadow:0 0 0 0 rgba(245,200,66,0.4);}50%{box-shadow:0 0 0 6px rgba(245,200,66,0);}}
+
+.ticket .num{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);line-height:1;}
+.ticket.taken .num{color:var(--accent);}
+.ticket.winner .num{color:var(--gold);}
+.ticket .name-tag{font-size:0.49rem;color:rgba(255,107,107,0.75);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;line-height:1.2;}
+.ticket.winner .name-tag{color:var(--gold-dark);}
+.ticket .edit-icon{position:absolute;top:3px;right:4px;font-size:8px;color:rgba(116,185,255,0.6);display:none;}
+.ticket.taken:hover .edit-icon{display:block;}
+.no-results{padding:2.5rem;text-align:center;color:var(--muted);font-size:0.85rem;grid-column:1/-1;}
+
+.draw-section{background:var(--navy2);border:1px solid rgba(245,200,66,0.2);border-radius:14px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;}
+.draw-section h2{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;}
+.draw-section p{font-size:0.8rem;color:var(--muted);margin-bottom:1.1rem;}
+.btn-draw{background:linear-gradient(135deg,var(--gold) 0%,#e8aa10 100%);color:var(--navy);border:none;padding:0.8rem 2.2rem;border-radius:50px;font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 18px rgba(245,200,66,0.22);}
+.btn-draw:hover{transform:translateY(-2px);box-shadow:0 6px 26px rgba(245,200,66,0.38);}
+.btn-draw:active{transform:translateY(0);}
+.btn-draw:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.rolling{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--gold);min-height:1.8rem;margin:0.6rem 0;}
+
+.participants-section{background:var(--navy2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
+.participants-header{padding:0.75rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.05);font-family:'Syne',sans-serif;font-size:0.87rem;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+.participants-list{max-height:240px;overflow-y:auto;}
+.participants-list::-webkit-scrollbar{width:4px;}
+.participants-list::-webkit-scrollbar-track{background:transparent;}
+.participants-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px;}
+.participant-row{padding:0.5rem 1.2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.8rem;}
+.participant-row:last-child{border-bottom:none;}
+.participant-row:hover{background:rgba(255,255,255,0.02);}
+.p-num{font-family:'Syne',sans-serif;font-weight:600;color:var(--accent);min-width:50px;font-size:0.8rem;}
+.p-name{flex:1;color:var(--text);padding:0 0.75rem;}
+.p-actions{display:flex;gap:0.3rem;}
+.p-btn{background:none;border:none;cursor:pointer;font-size:0.82rem;padding:2px 6px;border-radius:4px;transition:background 0.12s;line-height:1;}
+.p-btn.edit{color:var(--edit);}
+.p-btn.edit:hover{background:rgba(116,185,255,0.12);}
+.p-btn.del{color:var(--muted);}
+.p-btn.del:hover{color:var(--accent);background:rgba(255,107,107,0.1);}
+.empty-state{padding:2rem;text-align:center;color:var(--muted);font-size:0.8rem;}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;align-items:center;justify-content:center;}
+.overlay.active{display:flex;}
+.modal-box{background:var(--navy2);border-radius:16px;padding:1.75rem 1.75rem 1.5rem;width:90%;max-width:340px;animation:popIn 0.28s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.55);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-box h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:0.2rem;}
+.modal-sub{font-size:0.78rem;color:var(--muted);margin-bottom:1.1rem;}
+.modal-box input{width:100%;background:var(--navy3);border:1px solid rgba(255,255,255,0.12);color:var(--text);padding:0.55rem 0.85rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.93rem;margin-bottom:1rem;}
+.modal-box input:focus{outline:none;border-color:var(--gold);}
+.modal-btns{display:flex;gap:0.65rem;}
+.modal-btns .btn{flex:1;padding:0.58rem;font-size:0.85rem;text-align:center;}
+
+.winner-modal-box{background:var(--navy2);border:2px solid var(--gold);border-radius:20px;padding:2.25rem 1.75rem;text-align:center;max-width:370px;width:90%;animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+.trophy{font-size:3.2rem;display:block;margin-bottom:0.6rem;animation:bounce 0.5s ease 0.35s both;}
+@keyframes bounce{0%{transform:scale(0);}60%{transform:scale(1.18);}100%{transform:scale(1);}}
+.winner-modal-box h2{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--gold);}
+.winner-num{font-family:'Syne',sans-serif;font-size:3.2rem;font-weight:800;color:var(--white);line-height:1;margin:0.5rem 0;}
+.winner-name{font-size:1rem;color:var(--muted);margin-bottom:1.4rem;}
+.winner-name strong{color:var(--text);font-weight:500;}
+
+.confetti-piece{position:fixed;top:-10px;z-index:200;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--navy3);border:1px solid rgba(255,255,255,0.12);color:var(--text);padding:0.6rem 1.2rem;border-radius:30px;font-size:0.82rem;z-index:300;opacity:0;transition:opacity 0.25s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+@media(max-width:600px){
+  header,.main{padding:1rem;}
+  .config-panel,.search-bar,.legend{padding:0.65rem 1rem;}
+  #tickets-grid{grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:5px;}
+  .ticket .num{font-size:0.78rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <p>Conectando con la base de datos...</p>
+</div>
+
+<!-- Setup banner (visible until Firebase is configured) -->
+<div id="setup-banner">
+  <span class="sb-icon">⚙️</span>
+  <div class="sb-text">
+    <strong>Configuración pendiente:</strong> Para que todos compartan los mismos datos, debes configurar Firebase.
+    Sigue las instrucciones en el archivo <strong>README.md</strong> — toma menos de 5 minutos y es gratis.
+    Si ya configuraste Firebase, este aviso desaparecerá automáticamente.
+  </div>
+</div>
+
+<header>
+  <div class="logo-area">
+    <h1>🎟️ Rifa Solidaria</h1>
+    <p id="raffle-subtitle">Mi Rifa Solidaria 2025</p>
+  </div>
+  <div class="header-right">
+    <div id="sync-status" class="connecting">
+      <div class="sync-dot"></div>
+      <span id="sync-text">Conectando...</span>
+    </div>
+    <div class="header-stats">
+      <div class="stat"><div class="val" id="stat-total">1000</div><div class="lbl">Números</div></div>
+      <div class="stat"><div class="val" id="stat-sold">0</div><div class="lbl">Vendidos</div></div>
+      <div class="stat"><div class="val" id="stat-free">1000</div><div class="lbl">Disponibles</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="config-panel">
+  <div style="display:flex;align-items:center;gap:0.45rem">
+    <label>Nombre:</label>
+    <input type="text" id="raffle-name" value="Mi Rifa Solidaria 2025" placeholder="Nombre de la rifa...">
+  </div>
+  <div style="display:flex;align-items:center;gap:0.45rem">
+    <label>Números:</label>
+    <input type="number" id="raffle-count" value="1000" min="10" max="2000" step="10">
+  </div>
+  <button class="btn btn-gold" onclick="applyConfig()">Aplicar</button>
+  <button class="btn btn-outline" onclick="resetAll()">Reiniciar todo</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="🔍  Buscar número o nombre..." oninput="applyFilter()">
+  <div class="filter-btns">
+    <button class="fbtn active" onclick="setFilter('all',this)">Todos</button>
+    <button class="fbtn" onclick="setFilter('free',this)">Disponibles</button>
+    <button class="fbtn" onclick="setFilter('taken',this)">Vendidos</button>
+  </div>
+  <span id="filter-count" style="font-size:0.75rem;color:var(--muted);margin-left:auto"></span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-free"></div> Disponible — clic para asignar</div>
+  <div class="legend-item"><div class="dot dot-taken"></div> Vendido — clic para editar</div>
+  <div class="legend-item"><div class="dot dot-winner"></div> Ganador</div>
+</div>
+
+<div class="main">
+  <div id="tickets-grid"></div>
+
+  <div class="draw-section">
+    <h2>🎲 Realizar el Sorteo</h2>
+    <p id="draw-info">Registra participantes y luego realiza el sorteo.</p>
+    <div class="rolling" id="rolling-display"></div>
+    <button class="btn-draw" id="draw-btn" onclick="startDraw()" disabled>✨ Sortear Ganador</button>
+  </div>
+
+  <div class="participants-section">
+    <div class="participants-header">
+      <span>Participantes registrados</span>
+      <span id="participants-count" style="color:var(--gold);font-family:'Syne',sans-serif;font-weight:700">0</span>
+    </div>
+    <div class="participants-list" id="participants-list">
+      <div class="empty-state">Aún no hay participantes.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Ticket Modal -->
+<div class="overlay" id="ticket-overlay">
+  <div class="modal-box">
+    <h3 id="tm-title" style="color:var(--gold)">Número 0001</h3>
+    <p class="modal-sub" id="tm-sub">Ingresa el nombre del participante.</p>
+    <input type="text" id="tm-name" placeholder="Nombre del participante..." maxlength="50">
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeTicketModal()">Cancelar</button>
+      <button class="btn btn-danger" id="tm-release-btn" style="display:none" onclick="releaseTicket()">Liberar</button>
+      <button class="btn btn-gold" id="tm-confirm-btn" onclick="confirmTicket()">Reservar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Winner Modal -->
+<div class="overlay" id="winner-overlay">
+  <div class="winner-modal-box">
+    <span class="trophy">🏆</span>
+    <h2>¡Tenemos Ganador!</h2>
+    <div class="winner-num" id="winner-num">–</div>
+    <div class="winner-name" id="winner-name">–</div>
+    <button class="btn btn-gold" style="width:100%;padding:0.72rem;font-size:0.95rem;font-family:'Syne',sans-serif;font-weight:700;border-radius:8px" onclick="closeWinnerModal()">¡Celebrar! 🎉</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set, update, remove, get }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  // ══════════════════════════════════════════════════════
+  //  🔧 REEMPLAZA ESTOS VALORES CON TU CONFIGURACIÓN
+  //     DE FIREBASE (ver README.md para instrucciones)
+  // ══════════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAaF8KBkqqg9wVjGS1BQNZxjBFGLNLwwEc",
+    authDomain:        "rifa-solidaria-7e96c.firebaseapp.com",
+    databaseURL:       "https://rifa-solidaria-7e96c-default-rtdb.firebaseio.com",
+    projectId:         "rifa-solidaria-7e96c",
+    storageBucket:     "rifa-solidaria-7e96c.firebasestorage.app",
+    messagingSenderId: "403765742125",
+    appId:             "1:403765742125:web:327ded31f66afaf5aa86a4"
+  };
+  // ══════════════════════════════════════════════════════
+
+  const IS_CONFIGURED = !firebaseConfig.apiKey.includes("TU_");
+
+  let db, ticketsRef, configRef, winnerRef;
+  let tickets = {};
+  let totalNumbers = 1000;
+  let raffleName = "Mi Rifa Solidaria 2025";
+  let winnerNumber = null;
+  let selectedTicket = null;
+  let isEditing = false;
+  let currentFilter = 'all';
+
+  function pad(n) { return String(n).padStart(4,'0'); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  /* ── INIT ── */
+  if (!IS_CONFIGURED) {
+    document.getElementById('loading-screen').classList.add('hidden');
+    setSync('disconnected','Sin Firebase');
+    buildGridLocal();
+    showToast('⚠️ Modo local — configura Firebase para sincronizar');
+  } else {
+    document.getElementById('setup-banner').classList.add('hidden');
+    initFirebase();
+  }
+
+  function initFirebase() {
+    const app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    ticketsRef = ref(db, 'tickets');
+    configRef  = ref(db, 'config');
+    winnerRef  = ref(db, 'winner');
+
+    // Listen config
+    onValue(configRef, snap => {
+      const d = snap.val();
+      if (d) {
+        if (d.totalNumbers) totalNumbers = d.totalNumbers;
+        if (d.raffleName)   raffleName   = d.raffleName;
+        document.getElementById('raffle-name').value  = raffleName;
+        document.getElementById('raffle-count').value = totalNumbers;
+        document.getElementById('raffle-subtitle').textContent = raffleName;
+        document.title = '🎟️ ' + raffleName;
+      }
+      buildGridLocal();
+    }, { onlyOnce: true });
+
+    // Listen tickets (real-time)
+    onValue(ticketsRef, snap => {
+      tickets = snap.val() || {};
+      buildGridLocal();
+      setSync('connected','En vivo');
+      document.getElementById('loading-screen').classList.add('hidden');
+    });
+
+    // Listen winner
+    onValue(winnerRef, snap => {
+      const w = snap.val();
+      winnerNumber = w ? w.number : null;
+      refreshAllCells();
+    });
+
+    // Connection state
+    const connRef = ref(db, '.info/connected');
+    onValue(connRef, snap => {
+      if (snap.val()) setSync('connected','En vivo');
+      else            setSync('disconnected','Sin conexión');
+    });
+  }
+
+  function setSync(state, text) {
+    const el = document.getElementById('sync-status');
+    el.className = 'connected' === state ? 'connected' : ('disconnected' === state ? 'disconnected' : 'connecting');
+    el.className = state;
+    document.getElementById('sync-text').textContent = text;
+    const dot = el.querySelector('.sync-dot');
+    dot.style.animation = state === 'connecting' ? 'spin 1s linear infinite' : 'none';
+  }
+
+  /* ── GRID ── */
+  function buildGridLocal() {
+    const grid = document.getElementById('tickets-grid');
+    if (grid.children.length !== totalNumbers) {
+      grid.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      for (let i = 1; i <= totalNumbers; i++) {
+        const t = document.createElement('div');
+        t.className = 'ticket';
+        t.id = 'tk' + i;
+        t.addEventListener('click', () => openTicketModal(i));
+        frag.appendChild(t);
+      }
+      grid.appendChild(frag);
+    }
+    for (let i = 1; i <= totalNumbers; i++) updateCell(i);
+    updateStats();
+    applyFilter();
+  }
+
+  function refreshAllCells() {
+    for (let i = 1; i <= totalNumbers; i++) updateCell(i);
+  }
+
+  function updateCell(i) {
+    const t = document.getElementById('tk' + i);
+    if (!t) return;
+    const name = tickets[i];
+    const isW  = winnerNumber === i;
+    t.className = 'ticket' + (name ? ' taken' : '') + (isW ? ' winner' : '');
+    t.innerHTML = `<span class="num">${pad(i)}</span>` +
+      (name ? `<span class="name-tag">${esc(name)}</span><span class="edit-icon">✎</span>` : '');
+  }
+
+  /* ── STATS ── */
+  function updateStats() {
+    const sold = Object.keys(tickets).length;
+    document.getElementById('stat-total').textContent = totalNumbers;
+    document.getElementById('stat-sold').textContent  = sold;
+    document.getElementById('stat-free').textContent  = totalNumbers - sold;
+    document.getElementById('participants-count').textContent = sold;
+    const btn  = document.getElementById('draw-btn');
+    const info = document.getElementById('draw-info');
+    if (sold === 0) {
+      btn.disabled = true;
+      info.textContent = 'Registra al menos un participante para sortear.';
+    } else {
+      btn.disabled = false;
+      info.textContent = `${sold} participante${sold !== 1?'s':''} registrado${sold !== 1?'s':''}. ¡Listo para sortear!`;
+    }
+    renderParticipants();
+  }
+
+  /* ── FILTER ── */
+  window.setFilter = function(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter();
+  };
+
+  window.applyFilter = function() {
+    const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+    let visible = 0;
+    for (let i = 1; i <= totalNumbers; i++) {
+      const t = document.getElementById('tk' + i);
+      if (!t) continue;
+      const name   = (tickets[i] || '').toLowerCase();
+      const numStr = pad(i);
+      const matchQ = !q || numStr.includes(q) || name.includes(q) || String(i).includes(q);
+      const matchF = currentFilter === 'all'
+        || (currentFilter === 'free'  && !tickets[i])
+        || (currentFilter === 'taken' && !!tickets[i]);
+      if (matchQ && matchF) { t.classList.remove('hidden'); visible++; }
+      else t.classList.add('hidden');
+    }
+    let nr = document.getElementById('no-results-el');
+    const grid = document.getElementById('tickets-grid');
+    if (visible === 0) {
+      if (!nr) { nr = document.createElement('div'); nr.id='no-results-el'; nr.className='no-results'; grid.appendChild(nr); }
+      nr.textContent = 'Sin resultados para "' + (q || currentFilter) + '"';
+    } else if (nr) nr.remove();
+    document.getElementById('filter-count').textContent = visible + ' de ' + totalNumbers + ' números';
+  };
+
+  /* ── TICKET MODAL ── */
+  function openTicketModal(num) {
+    selectedTicket = num;
+    isEditing = !!tickets[num];
+    document.getElementById('tm-title').textContent = 'Número ' + pad(num);
+    document.getElementById('tm-sub').textContent = isEditing
+      ? 'Edita el nombre o libera este número.'
+      : 'Ingresa el nombre del participante para reservar.';
+    document.getElementById('tm-name').value = tickets[num] || '';
+    document.getElementById('tm-release-btn').style.display = isEditing ? '' : 'none';
+    document.getElementById('tm-confirm-btn').textContent = isEditing ? 'Guardar cambios' : 'Reservar';
+    document.getElementById('ticket-overlay').classList.add('active');
+    setTimeout(() => { const inp = document.getElementById('tm-name'); inp.focus(); inp.select(); }, 80);
+  }
+
+  document.getElementById('tm-name').addEventListener('keydown', e => {
+    if (e.key === 'Enter')  confirmTicket();
+    if (e.key === 'Escape') closeTicketModal();
+  });
+
+  window.closeTicketModal = function() {
+    document.getElementById('ticket-overlay').classList.remove('active');
+    selectedTicket = null;
+  };
+
+  window.confirmTicket = async function() {
+    const name = document.getElementById('tm-name').value.trim();
+    if (!name) { document.getElementById('tm-name').focus(); return; }
+    const num = selectedTicket;
+    closeTicketModal();
+    // Optimistic update
+    tickets[num] = name;
+    updateCell(num);
+    updateStats();
+    applyFilter();
+    if (IS_CONFIGURED) {
+      try {
+        await set(ref(db, 'tickets/' + num), name);
+        showToast('✅ Número ' + pad(num) + ' reservado');
+      } catch(e) {
+        showToast('❌ Error al guardar — revisa conexión');
+      }
+    }
+  };
+
+  window.releaseTicket = async function() {
+    if (!confirm('¿Liberar el número ' + pad(selectedTicket) + '?')) return;
+    const num = selectedTicket;
+    closeTicketModal();
+    if (winnerNumber === num) winnerNumber = null;
+    delete tickets[num];
+    updateCell(num);
+    updateStats();
+    applyFilter();
+    if (IS_CONFIGURED) {
+      try {
+        await remove(ref(db, 'tickets/' + num));
+        showToast('🔓 Número ' + pad(num) + ' liberado');
+      } catch(e) { showToast('❌ Error al guardar'); }
+    }
+  };
+
+  /* ── PARTICIPANTS ── */
+  function renderParticipants() {
+    const list = document.getElementById('participants-list');
+    const entries = Object.entries(tickets).sort((a,b) => Number(a[0]) - Number(b[0]));
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="empty-state">Aún no hay participantes.</div>';
+      return;
+    }
+    list.innerHTML = entries.map(([num, name]) =>
+      `<div class="participant-row">
+        <span class="p-num">#${pad(Number(num))}</span>
+        <span class="p-name">${esc(name)}</span>
+        <div class="p-actions">
+          <button class="p-btn edit" onclick="openTicketModal(${num})" title="Editar">✎</button>
+          <button class="p-btn del"  onclick="quickRemove(${num})"    title="Eliminar">✕</button>
+        </div>
+      </div>`
+    ).join('');
+  }
+
+  // expose for inline handlers
+  window.openTicketModal = openTicketModal;
+
+  window.quickRemove = async function(num) {
+    if (winnerNumber === num) winnerNumber = null;
+    delete tickets[num];
+    updateCell(num);
+    updateStats();
+    applyFilter();
+    if (IS_CONFIGURED) await remove(ref(db, 'tickets/' + num));
+  };
+
+  /* ── CONFIG ── */
+  window.applyConfig = async function() {
+    const nameVal  = document.getElementById('raffle-name').value.trim();
+    const countVal = parseInt(document.getElementById('raffle-count').value);
+    if (nameVal) {
+      raffleName = nameVal;
+      document.getElementById('raffle-subtitle').textContent = raffleName;
+      document.title = '🎟️ ' + raffleName;
+    }
+    if (countVal >= 10 && countVal <= 2000) {
+      const prev = totalNumbers;
+      totalNumbers = countVal;
+      if (countVal < prev) {
+        Object.keys(tickets).forEach(k => { if (Number(k) > totalNumbers) delete tickets[k]; });
+        if (winnerNumber > totalNumbers) winnerNumber = null;
+      }
+      buildGridLocal();
+    }
+    if (IS_CONFIGURED) {
+      await set(configRef, { raffleName, totalNumbers });
+      showToast('⚙️ Configuración guardada para todos');
+    }
+  };
+
+  window.resetAll = async function() {
+    if (!confirm('¿Estás seguro? Se eliminarán TODOS los participantes para todos los usuarios.')) return;
+    tickets = {};
+    winnerNumber = null;
+    document.getElementById('rolling-display').textContent = '';
+    buildGridLocal();
+    if (IS_CONFIGURED) {
+      await remove(ticketsRef);
+      await remove(winnerRef);
+      showToast('🔄 Rifa reiniciada');
+    }
+  };
+
+  /* ── DRAW ── */
+  window.startDraw = async function() {
+    const entries = Object.keys(tickets);
+    if (entries.length === 0) return;
+    const btn = document.getElementById('draw-btn');
+    btn.disabled = true;
+    winnerNumber = null;
+    const rolling = document.getElementById('rolling-display');
+    let count = 0;
+    const frames = 38;
+    const iv = setInterval(async () => {
+      const r = entries[Math.floor(Math.random() * entries.length)];
+      rolling.textContent = '🎲 ' + pad(Number(r));
+      count++;
+      if (count >= frames) {
+        clearInterval(iv);
+        const w = entries[Math.floor(Math.random() * entries.length)];
+        winnerNumber = Number(w);
+        rolling.textContent = '';
+        btn.disabled = false;
+        updateCell(winnerNumber);
+        showWinner(winnerNumber, tickets[winnerNumber]);
+        spawnConfetti();
+        if (IS_CONFIGURED) {
+          await set(winnerRef, { number: winnerNumber, name: tickets[winnerNumber], ts: Date.now() });
+        }
+      }
+    }, 55);
+  };
+
+  function showWinner(num, name) {
+    document.getElementById('winner-num').textContent = pad(num);
+    document.getElementById('winner-name').innerHTML = 'Participante: <strong>' + esc(name) + '</strong>';
+    document.getElementById('winner-overlay').classList.add('active');
+  }
+
+  window.closeWinnerModal = function() {
+    document.getElementById('winner-overlay').classList.remove('active');
+  };
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── CONFETTI ── */
+  function spawnConfetti() {
+    const colors = ['#F5C842','#FF6B6B','#2ECC71','#74B9FF','#A29BFE','#FD79A8'];
+    for (let i = 0; i < 100; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      const dur = 2 + Math.random() * 2;
+      p.style.cssText = `left:${Math.random()*100}vw;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${colors[i%colors.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${dur}s;animation-delay:${Math.random()*0.9}s;`;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), (dur+1)*1000);
+    }
+  }
+</script>
+</body>
+</html>
