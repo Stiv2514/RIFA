@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎟️ Rifa Solidaria</title>
+<title>🎟️ RIFA SOLIDARIA 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -31,10 +31,14 @@ body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;m
 #payment-banner .pb-divider{width:1px;height:36px;background:rgba(46,204,113,0.2);}
 #payment-banner .pb-account{display:flex;flex-direction:column;}
 #payment-banner .pb-bank{font-size:0.7rem;color:rgba(46,204,113,0.7);text-transform:uppercase;letter-spacing:0.5px;}
-#payment-banner .pb-num{font-family:"Syne",sans-serif;font-size:1.1rem;font-weight:800;color:#2ECC71;letter-spacing:1px;margin-top:1px;}
+#payment-banner .pb-num{font-family:"Syne",sans-serif;font-size:1.25rem;font-weight:800;color:#FFD700;letter-spacing:2px;margin-top:1px;text-shadow:0 0 12px rgba(255,215,0,0.6);}
 #payment-banner .pb-copy{background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.3);color:#2ECC71;padding:0.38rem 0.9rem;border-radius:20px;cursor:pointer;font-size:0.78rem;font-family:"DM Sans",sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;}
 #payment-banner .pb-copy:hover{background:rgba(46,204,113,0.22);border-color:rgba(46,204,113,0.5);}
 #payment-banner .pb-copy:active{transform:scale(0.97);}
+#payment-banner .pb-wa{background:#25D366;border:none;color:#fff;padding:0.42rem 1rem;border-radius:20px;cursor:pointer;font-size:0.82rem;font-family:"DM Sans",sans-serif;font-weight:600;transition:all 0.15s;white-space:nowrap;display:flex;align-items:center;gap:0.4rem;text-decoration:none;}
+#payment-banner .pb-wa:hover{background:#1ebe5d;transform:translateY(-1px);}
+#payment-banner .pb-wa:active{transform:scale(0.97);}
+
 #payment-banner .pb-note{font-size:0.72rem;color:rgba(255,255,255,0.35);font-style:italic;}
 
 /* SYNC STATUS */
@@ -208,14 +212,18 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   </div>
   <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
     <span class="pb-note">Realiza tu pago y reserva tu número</span>
-    <button class="pb-copy" onclick="copyAccount()">📋 Copiar número de cuenta</button>
+    <button class="pb-copy" onclick="copyAccount()">📋 Copiar cuenta</button>
+    <a class="pb-wa" href="https://wa.me/593968197204?text=Hola%20Maria%2C%20quiero%20apartar%20un%20n%C3%BAmero%20de%20la%20rifa.%20%F0%9F%8E%9F%EF%B8%8F%20Enseguida%20te%20indico%20cu%C3%A1l%20es%20y%20realizo%20el%20pago%20a%20la%20cuenta%202201894497." target="_blank">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.557 4.126 1.528 5.855L0 24l6.335-1.505A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.808 9.808 0 01-4.992-1.365l-.358-.213-3.758.893.946-3.658-.233-.374A9.787 9.787 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
+      Pagar por WhatsApp
+    </a>
   </div>
 </div>
 
 <header>
   <div class="logo-area">
-    <h1>🎟️ Rifa Solidaria</h1>
-    <p id="raffle-subtitle">Mi Rifa Solidaria 2025</p>
+    <h1>🎟️ RIFA SOLIDARIA 2026</h1>
+    <p id="raffle-subtitle">RIFA SOLIDARIA 2026</p>
   </div>
   <div class="header-right">
     <div id="sync-status" class="connecting">
@@ -233,7 +241,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 <div class="config-panel">
   <div style="display:flex;align-items:center;gap:0.45rem">
     <label>Nombre:</label>
-    <input type="text" id="raffle-name" value="Mi Rifa Solidaria 2025" placeholder="Nombre de la rifa...">
+    <input type="text" id="raffle-name" value="RIFA SOLIDARIA 2026" placeholder="Nombre de la rifa...">
   </div>
   <div style="display:flex;align-items:center;gap:0.45rem">
     <label>Números:</label>
@@ -333,7 +341,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   let db, ticketsRef, configRef, winnerRef;
   let tickets = {};
   let totalNumbers = 1000;
-  let raffleName = "Mi Rifa Solidaria 2025";
+  let raffleName = "RIFA SOLIDARIA 2026";
   let winnerNumber = null;
   let selectedTicket = null;
   let isEditing = false;
