@@ -185,6 +185,30 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 .prize-subtitle{font-size:0.88rem;color:rgba(255,255,255,0.6);max-width:340px;line-height:1.5;}
 .price-badge{display:inline-flex;align-items:center;gap:0.4rem;background:linear-gradient(135deg,#F5C842,#e8aa10);color:#0D1B2A;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;padding:0.35rem 1.1rem;border-radius:30px;width:fit-content;box-shadow:0 3px 14px rgba(245,200,66,0.4);}
 .price-badge span{font-size:0.78rem;font-weight:600;opacity:0.8;}
+
+/* ADMIN LOGIN MODAL */
+#admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999;align-items:center;justify-content:center;}
+#admin-overlay.active{display:flex;}
+#admin-box{background:var(--navy2);border:1px solid rgba(245,200,66,0.35);border-radius:16px;padding:2rem;width:90%;max-width:320px;text-align:center;animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+#admin-box h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.25rem;}
+#admin-box p{font-size:0.78rem;color:var(--muted);margin-bottom:1.1rem;}
+#admin-pwd{width:100%;background:var(--navy3);border:1px solid rgba(255,255,255,0.12);color:var(--text);padding:0.55rem 0.85rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;margin-bottom:0.75rem;text-align:center;letter-spacing:4px;}
+#admin-pwd:focus{outline:none;border-color:var(--gold);}
+#admin-error{font-size:0.75rem;color:var(--accent);margin-bottom:0.75rem;min-height:1rem;}
+.admin-btns{display:flex;gap:0.6rem;}
+.admin-btns button{flex:1;padding:0.6rem;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.15s;}
+#admin-cancel{background:rgba(255,255,255,0.06);color:var(--muted);}
+#admin-cancel:hover{color:var(--text);}
+#admin-ok{background:var(--gold);color:var(--navy);}
+#admin-ok:hover{background:#ffd44a;}
+
+/* LOCKED BANNER */
+#locked-banner{background:linear-gradient(135deg,#1a0000 0%,#2a0808 100%);border-bottom:2px solid rgba(255,107,107,0.4);padding:0.65rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+#locked-banner .lb-msg{font-size:0.8rem;color:rgba(255,107,107,0.9);font-weight:600;letter-spacing:0.3px;}
+#locked-banner .lb-msg span{color:rgba(255,200,200,0.6);font-weight:400;}
+#admin-login-btn{background:rgba(255,107,107,0.12);border:1px solid rgba(255,107,107,0.35);color:var(--accent);padding:0.35rem 0.9rem;border-radius:20px;cursor:pointer;font-size:0.77rem;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.15s;white-space:nowrap;}
+#admin-login-btn:hover{background:rgba(255,107,107,0.22);}
 </style>
 </head>
 <body>
@@ -196,6 +220,27 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 </div>
 
 <!-- Setup banner (visible until Firebase is configured) -->
+
+<!-- LOCKED BANNER -->
+<div id="locked-banner">
+  <div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— La rifa ha finalizado. Solo el administrador puede gestionar números.</span></div>
+  <button id="admin-login-btn" onclick="openAdminLogin()">🔑 Soy el admin</button>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div id="admin-overlay">
+  <div id="admin-box">
+    <h3>🔑 Acceso Administrador</h3>
+    <p>Ingresa la contraseña para gestionar la rifa</p>
+    <input type="password" id="admin-pwd" placeholder="••••••••" maxlength="30">
+    <div id="admin-error"></div>
+    <div class="admin-btns">
+      <button id="admin-cancel" onclick="closeAdminLogin()">Cancelar</button>
+      <button id="admin-ok" onclick="checkAdminPwd()">Entrar</button>
+    </div>
+  </div>
+</div>
+
 <div id="setup-banner">
   <span class="sb-icon">⚙️</span>
   <div class="sb-text">
@@ -253,9 +298,9 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
       <span id="sync-text">Conectando...</span>
     </div>
     <div class="header-stats">
-      <div class="stat"><div class="val" id="stat-total">1000</div><div class="lbl">Números</div></div>
+      <div class="stat"><div class="val" id="stat-total">1500</div><div class="lbl">Números</div></div>
       <div class="stat"><div class="val" id="stat-sold">0</div><div class="lbl">Vendidos</div></div>
-      <div class="stat"><div class="val" id="stat-free">1000</div><div class="lbl">Disponibles</div></div>
+      <div class="stat"><div class="val" id="stat-free">1500</div><div class="lbl">Disponibles</div></div>
     </div>
   </div>
 </header>
@@ -267,7 +312,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   </div>
   <div style="display:flex;align-items:center;gap:0.45rem">
     <label>Números:</label>
-    <input type="number" id="raffle-count" value="1000" min="10" max="2000" step="10">
+    <input type="number" id="raffle-count" value="1500" min="10" max="2000" step="10">
   </div>
   <button class="btn btn-gold" onclick="applyConfig()">Aplicar</button>
   <button class="btn btn-outline" onclick="resetAll()">Reiniciar todo</button>
@@ -362,7 +407,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 
   let db, ticketsRef, configRef, winnerRef;
   let tickets = {};
-  let totalNumbers = 1000;
+  let totalNumbers = 1500;
   let raffleName = "RIFA SOLIDARIA 2026";
   let winnerNumber = null;
   let selectedTicket = null;
@@ -523,6 +568,10 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 
   /* ── TICKET MODAL ── */
   function openTicketModal(num) {
+    if (!isAdmin) {
+      showToast('🔒 Registro cerrado — Solo el administrador puede gestionar números');
+      return;
+    }
     selectedTicket = num;
     isEditing = !!tickets[num];
     document.getElementById('tm-title').textContent = 'Número ' + pad(num);
@@ -617,6 +666,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 
   /* ── CONFIG ── */
   window.applyConfig = async function() {
+    if (!isAdmin) { showToast('🔒 Solo el administrador puede cambiar la configuración'); return; }
     const nameVal  = document.getElementById('raffle-name').value.trim();
     const countVal = parseInt(document.getElementById('raffle-count').value);
     if (nameVal) {
@@ -640,6 +690,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   };
 
   window.resetAll = async function() {
+    if (!isAdmin) { showToast('🔒 Solo el administrador puede reiniciar la rifa'); return; }
     if (!confirm('¿Estás seguro? Se eliminarán TODOS los participantes para todos los usuarios.')) return;
     tickets = {};
     winnerNumber = null;
@@ -654,6 +705,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 
   /* ── DRAW ── */
   window.startDraw = async function() {
+    if (!isAdmin) { showToast('🔒 Solo el administrador puede realizar el sorteo'); return; }
     const entries = Object.keys(tickets);
     if (entries.length === 0) return;
     const btn = document.getElementById('draw-btn');
@@ -722,6 +774,53 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
       showToast('Cuenta: 2201894497 — MARIA ZAMBRANO');
     });
   };
+
+  /* ── ADMIN MODE ── */
+  const ADMIN_PWD = 'Stiv2514@rifa';
+  let isAdmin = false;
+
+  window.openAdminLogin = function() {
+    document.getElementById('admin-overlay').classList.add('active');
+    document.getElementById('admin-pwd').value = '';
+    document.getElementById('admin-error').textContent = '';
+    setTimeout(() => document.getElementById('admin-pwd').focus(), 80);
+  };
+
+  window.closeAdminLogin = function() {
+    document.getElementById('admin-overlay').classList.remove('active');
+  };
+
+  window.checkAdminPwd = function() {
+    const val = document.getElementById('admin-pwd').value;
+    if (val === ADMIN_PWD) {
+      isAdmin = true;
+      closeAdminLogin();
+      document.getElementById('locked-banner').innerHTML =
+        '<div style="font-size:0.8rem;color:#2ECC71;font-weight:700;">✅ Modo administrador activo — Puedes gestionar todos los números</div>' +
+        '<button onclick="logoutAdmin()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--muted);padding:0.3rem 0.8rem;border-radius:20px;cursor:pointer;font-size:0.75rem;font-family:DM Sans,sans-serif;">Cerrar sesión</button>';
+      buildGridLocal();
+      showToast('✅ Sesión de administrador iniciada');
+    } else {
+      document.getElementById('admin-error').textContent = '❌ Contraseña incorrecta';
+      document.getElementById('admin-pwd').value = '';
+      document.getElementById('admin-pwd').focus();
+    }
+  };
+
+  window.logoutAdmin = function() {
+    isAdmin = false;
+    document.getElementById('locked-banner').innerHTML =
+      '<div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— La rifa ha finalizado. Solo el administrador puede gestionar números.</span></div>' +
+      '<button id="admin-login-btn" onclick="openAdminLogin()" style="background:rgba(255,107,107,0.12);border:1px solid rgba(255,107,107,0.35);color:var(--accent);padding:0.35rem 0.9rem;border-radius:20px;cursor:pointer;font-size:0.77rem;font-family:DM Sans,sans-serif;font-weight:600;">🔑 Soy el admin</button>';
+    buildGridLocal();
+    showToast('🔒 Sesión cerrada');
+  };
+
+  document.getElementById('admin-pwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAdminPwd();
+    if (e.key === 'Escape') closeAdminLogin();
+  });
+
 </script>
 </body>
 </html>
