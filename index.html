@@ -190,7 +190,6 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 #admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999;align-items:center;justify-content:center;}
 #admin-overlay.active{display:flex;}
 #admin-box{background:var(--navy2);border:1px solid rgba(245,200,66,0.35);border-radius:16px;padding:2rem;width:90%;max-width:320px;text-align:center;animation:popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);}
-@keyframes popIn{from{transform:scale(0.6);opacity:0;}to{transform:scale(1);opacity:1;}}
 #admin-box h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.25rem;}
 #admin-box p{font-size:0.78rem;color:var(--muted);margin-bottom:1.1rem;}
 #admin-pwd{width:100%;background:var(--navy3);border:1px solid rgba(255,255,255,0.12);color:var(--text);padding:0.55rem 0.85rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.95rem;margin-bottom:0.75rem;text-align:center;letter-spacing:4px;}
@@ -214,16 +213,10 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 <body>
 
 <!-- Loading screen -->
-<div id="loading-screen">
-  <div class="spinner"></div>
-  <p>Conectando con la base de datos...</p>
-</div>
-
-<!-- Setup banner (visible until Firebase is configured) -->
 
 <!-- LOCKED BANNER -->
 <div id="locked-banner">
-  <div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— La rifa ha finalizado. Solo el administrador puede gestionar números.</span></div>
+  <div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— Solo el administrador puede gestionar los números.</span></div>
   <button id="admin-login-btn" onclick="openAdminLogin()">🔑 Soy el admin</button>
 </div>
 
@@ -241,6 +234,12 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   </div>
 </div>
 
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <p>Conectando con la base de datos...</p>
+</div>
+
+<!-- Setup banner (visible until Firebase is configured) -->
 <div id="setup-banner">
   <span class="sb-icon">⚙️</span>
   <div class="sb-text">
@@ -257,18 +256,18 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
     <span class="pb-icon">💳</span>
     <div>
       <div class="pb-label">Titular de la cuenta</div>
-      <div class="pb-name">MARIA ZAMBRANO</div>
+      <div class="pb-name">JAMILETH NAYELY SUÁREZ PITA</div>
     </div>
     <div class="pb-divider"></div>
     <div class="pb-account">
-      <div class="pb-bank">Cuenta Transaccional</div>
-      <div class="pb-num">2201894497</div>
+      <div class="pb-bank">Pichincha Ahorros</div>
+      <div class="pb-num">2206928361</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
     <span class="pb-note">Realiza tu pago y reserva tu número</span>
     <button class="pb-copy" onclick="copyAccount()">📋 Copiar cuenta</button>
-    <a class="pb-wa" href="https://wa.me/593968197204?text=Hola%20Maria%2C%20quiero%20apartar%20un%20n%C3%BAmero%20de%20la%20rifa.%20%F0%9F%8E%9F%EF%B8%8F%20Enseguida%20te%20indico%20cu%C3%A1l%20es%20y%20realizo%20el%20pago%20a%20la%20cuenta%202201894497." target="_blank">
+    <a class="pb-wa" href="https://wa.me/593968197204?text=Hola%2C%20quiero%20apartar%20un%20n%C3%BAmero%20de%20la%20RIFA%20SOLIDARIA%202026.%20%F0%9F%8E%9F%EF%B8%8F%0A%0AQuiero%20el%20n%C3%BAmero%3A%20%2A_____%2A%0A%0ARealizar%C3%A9%20el%20pago%20a%3A%0A%F0%9F%8F%A6%20Banco%20Pichincha%20Ahorros%0A%F0%9F%92%B3%20Cuenta%3A%202206928361%0A%F0%9F%91%A4%20Titular%3A%20Jamileth%20Nayely%20Su%C3%A1rez%20Pita" target="_blank">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.557 4.126 1.528 5.855L0 24l6.335-1.505A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.808 9.808 0 01-4.992-1.365l-.358-.213-3.758.893.946-3.658-.233-.374A9.787 9.787 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/></svg>
       Pagar por WhatsApp
     </a>
@@ -298,9 +297,9 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
       <span id="sync-text">Conectando...</span>
     </div>
     <div class="header-stats">
-      <div class="stat"><div class="val" id="stat-total">1500</div><div class="lbl">Números</div></div>
+      <div class="stat"><div class="val" id="stat-total">1000</div><div class="lbl">Números</div></div>
       <div class="stat"><div class="val" id="stat-sold">0</div><div class="lbl">Vendidos</div></div>
-      <div class="stat"><div class="val" id="stat-free">1500</div><div class="lbl">Disponibles</div></div>
+      <div class="stat"><div class="val" id="stat-free">1000</div><div class="lbl">Disponibles</div></div>
     </div>
   </div>
 </header>
@@ -312,7 +311,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   </div>
   <div style="display:flex;align-items:center;gap:0.45rem">
     <label>Números:</label>
-    <input type="number" id="raffle-count" value="1500" min="10" max="2000" step="10">
+    <input type="number" id="raffle-count" value="1000" min="10" max="2000" step="10">
   </div>
   <button class="btn btn-gold" onclick="applyConfig()">Aplicar</button>
   <button class="btn btn-outline" onclick="resetAll()">Reiniciar todo</button>
@@ -407,7 +406,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
 
   let db, ticketsRef, configRef, winnerRef;
   let tickets = {};
-  let totalNumbers = 1500;
+  let totalNumbers = 1000;
   let raffleName = "RIFA SOLIDARIA 2026";
   let winnerNumber = null;
   let selectedTicket = null;
@@ -569,7 +568,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   /* ── TICKET MODAL ── */
   function openTicketModal(num) {
     if (!isAdmin) {
-      showToast('🔒 Registro cerrado — Solo el administrador puede gestionar números');
+      showToast('🔒 Solo el administrador puede gestionar los números');
       return;
     }
     selectedTicket = num;
@@ -768,10 +767,10 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   }
 
   window.copyAccount = function() {
-    navigator.clipboard.writeText('2201894497').then(() => {
-      showToast('✅ Número de cuenta copiado: 2201894497');
+    navigator.clipboard.writeText('2206928361').then(() => {
+      showToast('✅ Número de cuenta copiado: 2206928361');
     }).catch(() => {
-      showToast('Cuenta: 2201894497 — MARIA ZAMBRANO');
+      showToast('Cuenta: 2206928361 — JAMILETH NAYELY SUÁREZ PITA');
     });
   };
 
@@ -810,7 +809,7 @@ header{background:linear-gradient(135deg,var(--navy2) 0%,#1a2d50 100%);border-bo
   window.logoutAdmin = function() {
     isAdmin = false;
     document.getElementById('locked-banner').innerHTML =
-      '<div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— La rifa ha finalizado. Solo el administrador puede gestionar números.</span></div>' +
+      '<div class="lb-msg">🔒 Registro cerrado &nbsp;<span>— Solo el administrador puede gestionar los números.</span></div>' +
       '<button id="admin-login-btn" onclick="openAdminLogin()" style="background:rgba(255,107,107,0.12);border:1px solid rgba(255,107,107,0.35);color:var(--accent);padding:0.35rem 0.9rem;border-radius:20px;cursor:pointer;font-size:0.77rem;font-family:DM Sans,sans-serif;font-weight:600;">🔑 Soy el admin</button>';
     buildGridLocal();
     showToast('🔒 Sesión cerrada');
